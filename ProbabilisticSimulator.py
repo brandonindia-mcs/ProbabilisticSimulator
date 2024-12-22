@@ -2,6 +2,8 @@ import random
 from types import MappingProxyType
 from typing import Final
 
+def sim_test(test_id="TEST"):
+    print(f"\n### ProbabilisticSimulator.py ### {test_id} ###")
 ######
 ###### ProbabilisticSimulator
 ######
@@ -41,7 +43,13 @@ class ProbabilisticSimulator:
     return self.get_results(num_trials)
   
   def get_results(self, num_trials):
+    sim_test("get_results")
+    # INITIALIZE RESULTS, SET KEYS TO 0 FOR THE SIZE OF EVENTS
     results = {event_name: 0 for event_name in self.events}
+
+    ### DEBUG
+    print(f"results initialized: {results}")
+
     for _ in range(num_trials):
       random_number = random.random()
       cumulative_probability = 0
@@ -50,29 +58,25 @@ class ProbabilisticSimulator:
         if random_number <= cumulative_probability:
           results[event_name] += 1
           break
+      # print(f"cumulative_probability: {cumulative_probability}")
+
+    ### DEBUG
+    print(f"returning results: {results}")
+    
     return results
 
 ######
-###### BinarySimulator
+###### ObjectSimulator
 ######
-class BinarySimulator(ProbabilisticSimulator):
+class ObjectSimulator(ProbabilisticSimulator):
   def __init__(self, n):
     super().__init__()
     probability = 100/n/100
     print("Equal probability: "+str(probability))
     for i in range(1, n + 1):
-      self.add_event(Bit(name="bit-"+str(i)), probability)
+      self.add_event(SimObject(name="object-"+str(i)), probability)
 
-  # def get_results(self, num_trials):
-  #   print("These are the results:")
-  #   results = {}
-  #   for k,v in self.events.items():
-  #     print(k)
-  #     print(v)
-  #     results[k]=v
-  #   return results
-
-  def add_event(self, bit, probability):
+  def add_event(self, object, probability):
     """
     Adds an event to the simulator with a given probability.
 
@@ -82,7 +86,7 @@ class BinarySimulator(ProbabilisticSimulator):
     """
     if not (0 <= probability <= 1):
       raise ValueError("Probability must be between 0 and 1.")
-    self.events[bit.NAME] = probability
+    self.events[object.NAME] = probability
 
 ######
 ###### QuantumSimulator
@@ -92,10 +96,10 @@ class QuantumSimulator(ProbabilisticSimulator):
     self.events = {}
 
 ######
-###### Bit
+###### SimObject
 ######
-class Bit:
-  def __init__(self, state=0, name="bit"):
+class SimObject:
+  def __init__(self, state=0, name="object"):
     if state not in [0, 1]:
       raise ValueError("Invalid state. State must be 0 or 1.")
     self.state = state
@@ -107,7 +111,7 @@ class Bit:
     })
   
   def print(self):
-      print("bit " + self.NAME + " is: "+self.states.get((self.get_state())))
+      print("object " + self.NAME + " is: "+self.states.get((self.get_state())))
 
   def get_state(self):
       return self.state
@@ -127,4 +131,4 @@ class Bit:
     self.state=int(bin(self.state ^ 1), 2)
 
   def __str__(self):
-      return "bit " + self.NAME + " is: "+self.states.get((self.get_state()))
+      return "object " + self.NAME + " is: "+self.states.get((self.get_state()))

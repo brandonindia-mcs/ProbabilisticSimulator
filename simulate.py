@@ -1,7 +1,7 @@
 from ProbabilisticSimulator import *
 import sys
 def sim_test(test_id="TEST"):
-    print("\n#### "+str(test_id)+" ###")
+    print(f"\n##### simulate.py ### {test_id} test #####")
 def is_positive_int(value):
     try:
         num = int(value)
@@ -9,8 +9,8 @@ def is_positive_int(value):
     except ValueError:
         return False
 
-def print_a_bit(bit):
-    print("bit is:"+str(bit.get_state()))
+def print_object(object):
+    print("object is:"+str(object.get_state()))
 
 if __name__ == "__main__":
     all_positive_ints = True
@@ -45,14 +45,20 @@ if __name__ == "__main__":
     if all_positive_ints:
         print("All arguments are positive integers.")
     
-    sim_test("BIT CUSTOM PRINT")
-    b1 = Bit(name="bit1")
+    sim_test("OBJECT CUSTOM PRINT")
+    b1 = SimObject(name="object1")
     print(b1)
-    b1.NAME = "should not be changed"
+    b1.NAME = "should not have been changed"
     print(b1)
 
-    sim_test("BIT STATE")
-    b=Bit()
+    sim_test("OBJECT INSTANCES/TYPES")
+    print(type(simulator))
+    print(isinstance(simulator, ProbabilisticSimulator))
+    print(type(b1))
+    print(isinstance(b1, SimObject))
+
+    sim_test("OBJECT STATE")
+    b = SimObject()
     b.print()
     b.set_on()
     b.print()
@@ -69,13 +75,7 @@ if __name__ == "__main__":
     b.toggle()
     b.print()
 
-    sim_test("OBJECT INSTANCES/TYPES")
-    print(type(simulator))
-    print(isinstance(simulator, ProbabilisticSimulator))
-    print(type(b))
-    print(isinstance(b, Bit))
-
-    sim_test("BinarySimulator")
-    binary_simulator = BinarySimulator(int(NUMBER_OF_OBJECTS_UNDER_TEST))
-    print(binary_simulator.simulate(int(NUMBER_OF_SIMULATIONS)))
+    sim_test("ObjectSimulator")
+    object_simulator = ObjectSimulator(int(NUMBER_OF_OBJECTS_UNDER_TEST))
+    print(object_simulator.simulate(int(NUMBER_OF_SIMULATIONS)))
 
