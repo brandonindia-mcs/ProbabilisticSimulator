@@ -15,15 +15,7 @@ def print_a_bit(bit):
 if __name__ == "__main__":
     all_positive_ints = True
 
-    sim_test("ARGUMENTS")
-    print("Number of arguments:", len(sys.argv))
-    print("Argument List:", sys.argv)
-
-    sim_test("ARGV")
-    print(sys.argv[1])
-    print(sys.argv[2])
-
-    sim_test("ProbabilisticSimulator")
+    sim_test("CONTROL BASE TEST: ProbabilisticSimulator")
     simulator = ProbabilisticSimulator()
     simulator.add_event("Heads", 0.5)
     simulator.add_event("Tails", 0.5)
@@ -31,6 +23,17 @@ if __name__ == "__main__":
     results = simulator.simulate(100)
     print("Results:")
     print(results)
+
+    sim_test("ARGUMENTS")
+    print("Number of arguments:", len(sys.argv))
+    print("Argument List:", sys.argv)
+
+    print("sys.argv[1]:"+sys.argv[1])
+    print("sys.argv[2]:"+sys.argv[2])
+    NUMBER_OF_OBJECTS_UNDER_TEST = sys.argv[1]
+    NUMBER_OF_SIMULATIONS = sys.argv[2]
+    print("NUMBER_OF_OBJECTS_UNDER_TEST:" + NUMBER_OF_OBJECTS_UNDER_TEST)
+    print("NUMBER_OF_SIMULATIONS:" + NUMBER_OF_SIMULATIONS)
 
     sim_test("POSITIVE INTEGERS")
     for arg in sys.argv[1:]:  # Skip the script name (sys.argv[0])
@@ -73,6 +76,6 @@ if __name__ == "__main__":
     print(isinstance(b, Bit))
 
     sim_test("BinarySimulator")
-    binary_simulator = BinarySimulator(int(sys.argv[1]))
-    print(binary_simulator.simulate(int(sys.argv[2])))
+    binary_simulator = BinarySimulator(int(NUMBER_OF_OBJECTS_UNDER_TEST))
+    print(binary_simulator.simulate(int(NUMBER_OF_SIMULATIONS)))
 

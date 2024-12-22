@@ -37,6 +37,7 @@ class ProbabilisticSimulator:
       A dictionary where the keys are event names and the values are the number of times
       each event occurred.
     """
+
     return self.get_results(num_trials)
   
   def get_results(self, num_trials):
