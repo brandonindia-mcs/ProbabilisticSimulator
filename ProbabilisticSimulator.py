@@ -99,36 +99,59 @@ class QuantumSimulator(ProbabilisticSimulator):
 ###### SimObject
 ######
 class SimObject:
-  def __init__(self, state=0, name="object"):
-    if state not in [0, 1]:
-      raise ValueError("Invalid state. State must be 0 or 1.")
+  def __init__(self, state=None, name="object"):
     self.state = state
     self.NAME : Final = name
+
+  def __str__(self):
+      return f"object {self.NAME} is: {self.get_state()}"
+  
+  def print(self):
+      print(f"object {self.NAME} is: {self.get_state()}")
+      return self
+
+  def get_state(self):
+      return self.state
+
+  def set_state(self, state):
+    self.state = state
+
+######
+###### Bit
+######
+class Bit(SimObject):
+  def __init__(self, state=0, name="bit"):
+    super().__init__(state, name)
+    if self.state not in [0, 1]:
+      raise ValueError("Invalid state. State must be 0 or 1.")
 
     self.states = MappingProxyType({
       0:"Off",
       1:"On"
     })
+
+  def __str__(self):
+      return f"{type(self)} {self.NAME} is: {self.states.get(self.get_state())}"
   
   def print(self):
-      print("object " + self.NAME + " is: "+self.states.get((self.get_state())))
-
-  def get_state(self):
-      return self.state
+      print(f"{type(self)} {self.NAME} is: {self.states.get(self.get_state())}")
+      return self
 
   def set_on(self):
     self.state = 1
+    return self
 
   def set_off(self):
     self.state = 0
+    return self
 
   def set_state(self, state):
-    if state not in [0, 1]:
+    super(Bit, self).set_state(state)
+    if self.state not in [0, 1]:
         raise ValueError("Invalid state. State must be 0 or 1.")
-    self.state = state
+    return self
 
   def toggle(self):
     self.state=int(bin(self.state ^ 1), 2)
+    return self
 
-  def __str__(self):
-      return "object " + self.NAME + " is: "+self.states.get((self.get_state()))
