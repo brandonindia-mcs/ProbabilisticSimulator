@@ -46,13 +46,13 @@ class ProbabilisticSimulator:
     sim_test(f"{type(self)}::get_results(self, num_trials):")
 
     ### DEBUG
-    print(f"events {self.events}")
+    # print(f"events {self.events}")
 
     # INITIALIZE RESULTS, SET KEYS TO 0 FOR THE SIZE OF EVENTS
     results = {event_name: 0 for event_name in self.events}
 
     ### DEBUG
-    print(f"{type(self)}::get_results: initialized results: {results}")
+    # print(f"{type(self)}::get_results: initialized results: {results}")
 
     for _ in range(num_trials):
       random_number = random.random()
@@ -67,7 +67,7 @@ class ProbabilisticSimulator:
       # print(f"cumulative_probability: {cumulative_probability}")
 
     ### DEBUG
-    print(f"returning results: {results}")
+    # print(f"returning results: {results}")
     
     return results
 
@@ -95,6 +95,7 @@ class ObjectSimulator(ProbabilisticSimulator):
 ######
 class SimObject:
   def __init__(self, state=None, name="object"):
+    self.ERROR_MESSAGE = "Invalid state."
     self.state = state
     self.NAME : Final = name
 
@@ -122,8 +123,7 @@ class BitSimulator(ObjectSimulator):
     ### DEBUG
     # print(f"{type(self)}::setup(self, n)")
 
-    self.bit_count = n
-    for i in range(0, self.bit_count):
+    for i in range(0, n):
       self.add_event(Bit(name="bit-"+str(i)))
 
   def add_event(self, bit, probability=None):
@@ -188,18 +188,13 @@ class Bit(SimObject):
     if self.state not in [0, 1]:
       raise ValueError("Invalid state. State must be 0 or 1.")
 
-    # self.states = MappingProxyType({
-    #   0:"Off",
-    #   1:"On"
-    # })
-
     self.states = MappingProxyType({
       0:{"state":"Off","probability":.5},
       1:{"state":"On","probability":.5}
     })
 
     ### DEBUG
-    print(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
+    # print(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
 
   def __str__(self):
       return f"object {type(self)} {self.NAME} is: {self.states.get(self.get_state())}"
@@ -225,7 +220,49 @@ class Bit(SimObject):
   def toggle(self):
     self.state=int(bin(self.state ^ 1), 2)
     return self
+  
+######
+###### Tres
+######
+class Tres(SimObject):
+  def __init__(self, state=0, name="tres"):
+    super().__init__(state, name)
+    self.ERROR_MESSAGE = "Invalid state. State must be 0, 1, or 2."
+    if self.state not in [0, 1]:
+      raise ValueError(self.ERROR_MESSAGE)
 
+    self.states = MappingProxyType({
+      0:{"state":"STATE_ZERO","probability":.33},
+      1:{"state":"STATE_ONE","probability":.34},
+      2:{"state":"STATE_TWO","probability":.33}
+    })
+
+    ### DEBUG
+    # print(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
+
+  def __str__(self):
+      return f"object {type(self)} {self.NAME} is: {self.states.get(self.get_state())}"
+  
+  def print(self):
+      print(f"object {type(self)} {self.NAME} is: {self.states.get(self.get_state())}")
+      return self
+
+  def set_state(self, state):
+    super().set_state(state)
+    if self.state not in [0, 1, 2]:
+        raise ValueError(self.ERROR_MESSAGE)
+    return self
+
+######
+###### TresSimulator
+######
+class TresSimulator(BitSimulator):
+  def __init__(self, n=1):
+    super().__init__(n)
+
+  def setup(self, n):
+    for i in range(0, n):
+      self.add_event(Tres(name="tres-"+str(i)))
   
 ######
 ###### QuantumSimulator
