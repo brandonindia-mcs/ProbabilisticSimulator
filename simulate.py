@@ -87,7 +87,19 @@ if __name__ == "__main__":
 
 
     sim_test("BIT SIMULATOR")
-    bit_sim = BitSimulator(2)
+    bit_sim = BitSimulator(5)
     results = bit_sim.simulate(1000)
-    print("Results:")
-    print(results)
+    # print("Results:")
+    # print(results)
+
+    for state, result in results.items():
+      print(f"state: {state} result: {result}")
+
+    sim_test("TRES SIMULATOR")
+    tres_sim = TresSimulator(5)
+    results = tres_sim.simulate(1000)
+    # print("Results:")
+    # print(results)
+
+    for state, result in results.items():
+      print(f"state: {state} result: {result}")
