@@ -3,7 +3,7 @@ from types import MappingProxyType
 from typing import Final
 
 def sim_test(test_id="TEST"):
-    print(f"\n### ProbabilisticSimulator.py ### {test_id} ###")
+    print(f"\n####****###### ProbabilisticSimulator.py ### {test_id} #****#")
 ######
 ###### ProbabilisticSimulator
 ######
@@ -43,17 +43,23 @@ class ProbabilisticSimulator:
     return self.get_results(num_trials)
   
   def get_results(self, num_trials):
-    sim_test("get_results")
+    sim_test(f"{type(self)}::get_results(self, num_trials):")
+
+    ### DEBUG
+    print(f"events {self.events}")
+
     # INITIALIZE RESULTS, SET KEYS TO 0 FOR THE SIZE OF EVENTS
     results = {event_name: 0 for event_name in self.events}
 
     ### DEBUG
-    print(f"results initialized: {results}")
+    print(f"{type(self)}::get_results: initialized results: {results}")
 
     for _ in range(num_trials):
       random_number = random.random()
       cumulative_probability = 0
+      # print(f"Doing results")
       for event_name, probability in self.events.items():
+        # print(f"Result\n\tevent_name: {event_name}\n\tprobabiliity: {probability}")
         cumulative_probability += probability
         if random_number <= cumulative_probability:
           results[event_name] += 1
@@ -67,33 +73,22 @@ class ProbabilisticSimulator:
 
 ######
 ###### ObjectSimulator
-######
+###### n IS THE NUMBER OF NEW OBJECTS TO CREATE,
+###### AND RUN THE SIMULATION ON WITH PROBABILITY
+###### EQUALLY DISTRIBUTED
 class ObjectSimulator(ProbabilisticSimulator):
-  def __init__(self, n):
+  def __init__(self, n=1):
     super().__init__()
+    self.setup(n)
+
+  def setup(self, n):
     probability = 100/n/100
     print("Equal probability: "+str(probability))
-    for i in range(1, n + 1):
+    for i in range(0, n):
       self.add_event(SimObject(name="object-"+str(i)), probability)
 
   def add_event(self, object, probability):
-    """
-    Adds an event to the simulator with a given probability.
-
-    Args:
-      event_name: The name of the event.
-      probability: The probability of the event occurring (between 0 and 1).
-    """
-    if not (0 <= probability <= 1):
-      raise ValueError("Probability must be between 0 and 1.")
     self.events[object.NAME] = probability
-
-######
-###### QuantumSimulator
-######
-class QuantumSimulator(ProbabilisticSimulator):
-  def __init__(self):
-    self.events = {}
 
 ######
 ###### SimObject
@@ -104,10 +99,10 @@ class SimObject:
     self.NAME : Final = name
 
   def __str__(self):
-      return f"object {self.NAME} is: {self.get_state()}"
+      return f"object {type(self)} is: {self.NAME} is: {self.get_state()}"
   
   def print(self):
-      print(f"object {self.NAME} is: {self.get_state()}")
+      print(f"object {type(self)} is: {self.NAME} is: {self.get_state()}")
       return self
 
   def get_state(self):
@@ -117,6 +112,74 @@ class SimObject:
     self.state = state
 
 ######
+###### BitSimulator
+######
+class BitSimulator(ObjectSimulator):
+  def __init__(self, n=1):
+    super().__init__(n)
+
+  def setup(self, n):
+    ### DEBUG
+    # print(f"{type(self)}::setup(self, n)")
+
+    self.bit_count = n
+    for i in range(0, self.bit_count):
+      self.add_event(Bit(name="bit-"+str(i)))
+
+  def add_event(self, bit, probability=None):
+    ### DEBUG
+    # print(f"{type(self)}::add_event: adding events for: {bit}")
+
+    tmp0 = {}
+    for k, v in bit.states.items():
+      ### DEBUG
+      # print(f"k is {k} v is {v}")
+
+      tmp1 = {f"{bit.NAME}-{k}":v}
+      tmp0.update(tmp1.items())
+
+      ### DEBUG
+      # print(f"tmp1: {tmp1}")
+
+    ### DEBUG
+    # print(f"tmp0: {tmp0}")
+
+    self.events[f"{bit.NAME}"] = tmp0
+
+  def get_results(self, num_trials):
+    sim_test(f"{type(self)}::get_results(self, num_trials):")
+
+    ### DEBUG
+    # print(f"{type(self)}::get_results: events {self.events}")
+
+    # INITIALIZE RESULTS, SET KEYS TO 0 FOR THE SIZE OF EVENTS
+    d = {}
+    for k1 in self.events.keys():
+      d.update(self.events[k1])
+    results = {event_name: 0 for event_name in d.keys()}
+
+    ### DEBUG
+    # print(f"{type(self)}::get_results: initialized results: {results}")
+
+    for _ in range(num_trials):
+      # print(f"Doing results")
+      for event_name, probability in self.events.items():
+        random_number = random.random()
+        cumulative_probability = 0
+        # print(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
+        for ref, dict in probability.items():
+          # print(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
+          cumulative_probability += dict["probability"]
+          if random_number <= cumulative_probability:
+            results[ref] += 1
+            break
+
+    ### DEBUG
+    # print(f"{type(self)}::get_results: returning results: {results}")
+
+    return results
+  
+######
 ###### Bit
 ######
 class Bit(SimObject):
@@ -125,16 +188,24 @@ class Bit(SimObject):
     if self.state not in [0, 1]:
       raise ValueError("Invalid state. State must be 0 or 1.")
 
+    # self.states = MappingProxyType({
+    #   0:"Off",
+    #   1:"On"
+    # })
+
     self.states = MappingProxyType({
-      0:"Off",
-      1:"On"
+      0:{"state":"Off","probability":.5},
+      1:{"state":"On","probability":.5}
     })
 
+    ### DEBUG
+    print(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
+
   def __str__(self):
-      return f"{type(self)} {self.NAME} is: {self.states.get(self.get_state())}"
+      return f"object {type(self)} {self.NAME} is: {self.states.get(self.get_state())}"
   
   def print(self):
-      print(f"{type(self)} {self.NAME} is: {self.states.get(self.get_state())}")
+      print(f"object {type(self)} {self.NAME} is: {self.states.get(self.get_state())}")
       return self
 
   def set_on(self):
@@ -146,7 +217,7 @@ class Bit(SimObject):
     return self
 
   def set_state(self, state):
-    super(Bit, self).set_state(state)
+    super().set_state(state)
     if self.state not in [0, 1]:
         raise ValueError("Invalid state. State must be 0 or 1.")
     return self
@@ -155,3 +226,10 @@ class Bit(SimObject):
     self.state=int(bin(self.state ^ 1), 2)
     return self
 
+  
+######
+###### QuantumSimulator
+######
+class QuantumSimulator(ProbabilisticSimulator):
+  def __init__(self):
+    self.events = {}
