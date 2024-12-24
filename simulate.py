@@ -64,7 +64,7 @@ if __name__ == "__main__":
     print(object_simulator.simulate(NUMBER_OF_SIMULATIONS))
 
     sim_test("BIT STATE")
-    b = Bit().print()
+    b = BitObject().print()
     b.set_on().print()
     b.set_off().print()
     b.set_state(1).print()
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     b.toggle().print()
 
     sim_test("BIT INHERITANCE")
-    b = Bit(name="this").print()
+    b = BitObject(name="this").print()
     b.toggle().print()
     b.toggle().print()
     b.set_state(1).print()
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     sim_test("BIT SIMULATOR")
     bit_sim = BitSimulator(5)
     results = bit_sim.simulate(1000)
-    # print("Results:")
+    print("Results:")
     # print(results)
 
     for state, result in results.items():
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     sim_test("TRES SIMULATOR")
     tres_sim = TresSimulator(5)
     results = tres_sim.simulate(1000)
-    # print("Results:")
+    print("Results:")
     # print(results)
 
     for state, result in results.items():

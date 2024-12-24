@@ -124,7 +124,7 @@ class BitSimulator(ObjectSimulator):
     # print(f"{type(self)}::setup(self, n)")
 
     for i in range(0, n):
-      self.add_event(Bit(name="bit-"+str(i)))
+      self.add_event(BitObject(name="bit-"+str(i)))
 
   def add_event(self, bit, probability=None):
     ### DEBUG
@@ -180,11 +180,16 @@ class BitSimulator(ObjectSimulator):
     return results
   
 ######
-###### Bit
+###### BitObject
 ######
-class Bit(SimObject):
+class BitObject(SimObject):
   def __init__(self, state=0, name="bit"):
     super().__init__(state, name)
+    self.set_state(state)
+
+    ### DEBUG
+    print(f"{type(self)} state: {self.state}")
+
     if self.state not in [0, 1]:
       raise ValueError("Invalid state. State must be 0 or 1.")
 
@@ -222,13 +227,18 @@ class Bit(SimObject):
     return self
   
 ######
-###### Tres
+###### TresObject
 ######
-class Tres(SimObject):
+class TresObject(SimObject):
   def __init__(self, state=0, name="tres"):
     super().__init__(state, name)
+    self.set_state(state)
+
+    ### DEBUG
+    print(f"{type(self)} state: {self.state}")
+
     self.ERROR_MESSAGE = "Invalid state. State must be 0, 1, or 2."
-    if self.state not in [0, 1]:
+    if self.state not in [0, 1, 2]:
       raise ValueError(self.ERROR_MESSAGE)
 
     self.states = MappingProxyType({
@@ -262,7 +272,7 @@ class TresSimulator(BitSimulator):
 
   def setup(self, n):
     for i in range(0, n):
-      self.add_event(Tres(name="tres-"+str(i)))
+      self.add_event(TresObject(name="tres-"+str(i)))
   
 ######
 ###### QuantumSimulator
