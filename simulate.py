@@ -102,19 +102,19 @@ def testing_round_1():
     for state, result in results.items():
         print(f"state: {state} result: {result}")
         
-if __name__ == "__main__":
-    # testing_round_1()
-
-    sim_test("STATES SIMULATOR")
+def states_simulator():
+    sim_test("STATES SIMULATOR 1")
     states_sim = StatesSimulator({
       0:{"probability":.10},
       1:{"probability":.20},
       2:{"probability":.70}
     })
-    results1 = states_sim.simulate(2)
-    print(f"Results:\n\t{results1}")
+    results = states_sim.simulate(2)
+    print(f"Results:\n\t{results}")
+    for sim_run, result in results.items():
+      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
 
-    sim_test("STATES SIMULATOR")
+    sim_test("STATES SIMULATOR 2")
     states_sim = StatesSimulator({
       0:{"probability":.10},
       1:{"probability":.20},
@@ -123,12 +123,14 @@ if __name__ == "__main__":
       4:{"probability":.13},
       5:{"probability":.30}
     })
-    results1 = states_sim.simulate(3)
-    print(f"Results:\n\t{results1}")
+    results = states_sim.simulate(3)
+    print(f"Results:\n\t{results}")
+    for sim_run, result in results.items():
+      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
 
-    for sim_run, result1 in results1.items():
-      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result1}")
+    return
 
+def named_states_simulator():
     sim_test("NAMED STATES SIMULATOR")
     named_states_sim = NamedStatesSimulator({
       0:{"state":"STATE_ZERO","probability":.10},
@@ -140,6 +142,9 @@ if __name__ == "__main__":
     for sim_run, result in results.items():
       print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
 
+    return
+
+def state_in_list_simulator():
     sim_test("STATES IN LIST SIMULATOR")
     states_sim = StatesListSimulator([
       {"probability":.10},
@@ -158,3 +163,12 @@ if __name__ == "__main__":
     print(f"Results:\n\t{results}\n")
     for state, result in results.items():
       print(f"\tstate {state}:\t{result}")
+    return
+
+if __name__ == "__main__":
+    # testing_round_1()
+    # states_simulator()
+    named_states_simulator()
+    state_in_list_simulator()
+
+
