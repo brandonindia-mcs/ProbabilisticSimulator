@@ -106,14 +106,13 @@ if __name__ == "__main__":
     # testing_round_1()
 
     sim_test("STATES SIMULATOR")
-    states_sim = StatesSimulator(5, {
+    states_sim = StatesSimulator({
       0:{"state":"STATE_ZERO","probability":.10},
       1:{"state":"STATE_ONE","probability":.20},
       2:{"state":"STATE_TWO","probability":.70}
     })
-    results = states_sim.simulate(1000)
-    print("Results:")
-    print(results)
+    results = states_sim.simulate(2)
+    print(f"Results:\n\t{results}")
 
-    for state, result in results.items():
-      print(f"state: {state} result: {result}")
+    for sim_run, result in results.items():
+      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
