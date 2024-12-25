@@ -3,7 +3,7 @@ from types import MappingProxyType
 from typing import Final
 
 def sim_test(test_id="TEST"):
-    print(f"\n####****###### ProbabilisticSimulator.py ### {test_id} #****#")
+    print(f"\n### ProbabilisticSimulator.py ### {test_id} #******************#")
 ######
 ###### ProbabilisticSimulator
 ######
@@ -276,3 +276,47 @@ class TresObject(SimObject):
     if self.state not in [0, 1, 2]:
         raise ValueError(self.ERROR_MESSAGE)
     return self
+
+import hashlib
+######
+###### StatesSimulator
+######
+class StatesSimulator(ProbabilisticSimulator):
+  def __init__(self, n=1, states={}):
+    super().__init__()
+    self.states = states
+    self.setup(n, states)
+
+  def setup(self, n, states):
+    for i in range(0, n):
+      self.add_event(states)
+
+  def add_event(self, obj, probability=None):
+    tmp0 = {}
+    for k, v in obj.items():
+      tmp1 = {f"{k}":v}
+      tmp0.update(tmp1.items())
+    self.events[f"{hashlib.sha256(str(obj).encode()).hexdigest()}"] = tmp0
+
+  def get_results(self, num_trials):
+    sim_test(f"{type(self)}::get_results(self, num_trials):")
+    d = {}
+    for k1 in self.events.keys():
+      d.update(self.events[k1])
+    results = {event_name: 0 for event_name in d.keys()}
+
+    for _ in range(num_trials):
+      # print(f"Doing results")
+      for event_name, probability in self.events.items():
+        random_number = random.random()
+        cumulative_probability = 0
+        # print(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
+        for ref, dict in probability.items():
+          # print(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
+          cumulative_probability += dict["probability"]
+          if random_number <= cumulative_probability:
+            results[ref] += 1
+            break
+
+    return results
+

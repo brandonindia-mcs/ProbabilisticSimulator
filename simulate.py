@@ -1,7 +1,7 @@
 from ProbabilisticSimulator import *
 import sys
 def sim_test(test_id="TEST"):
-    print(f"\n#################### simulate.py ### {test_id} test #####")
+    print(f"\n### simulate.py ### {test_id} test ######################")
 def is_positive_int(value):
     try:
         num = int(value)
@@ -103,17 +103,17 @@ def testing_round_1():
         print(f"state: {state} result: {result}")
         
 if __name__ == "__main__":
-    testing_round_1()
+    # testing_round_1()
 
-    # sim_test("STATES SIMULATOR")
-    # states_sim = StatesSimulator(5, {
-    #   0:{"state":"STATE_ZERO","probability":.10},
-    #   1:{"state":"STATE_ONE","probability":.20},
-    #   2:{"state":"STATE_TWO","probability":.70}
-    # })
-    # results = states_sim.simulate(1000)
-    # print("Results:")
-    # # print(results)
+    sim_test("STATES SIMULATOR")
+    states_sim = StatesSimulator(5, {
+      0:{"state":"STATE_ZERO","probability":.10},
+      1:{"state":"STATE_ONE","probability":.20},
+      2:{"state":"STATE_TWO","probability":.70}
+    })
+    results = states_sim.simulate(1000)
+    print("Results:")
+    print(results)
 
-    # for state, result in results.items():
-    #   print(f"state: {state} result: {result}")
+    for state, result in results.items():
+      print(f"state: {state} result: {result}")
