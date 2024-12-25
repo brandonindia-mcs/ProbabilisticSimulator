@@ -278,60 +278,6 @@ class TresObject(SimObject):
     return self
 
 import hashlib
-######
-###### NamedStatesSimulator
-######
-class NamedStatesSimulator(ProbabilisticSimulator):
-  def __init__(self, states={}):
-    super().__init__()
-    # print(f"*** {type(self)}::constructor")
-
-    self.states = states
-    # print(f"self.states length: {len(self.states)}")
-    self.add_event(states)
-    # print(f"self.events length: {len(self.events)}")
-    # print(f"self.events: {self.events}")
-
-  def add_event(self, obj, probability=None):
-    tmp0 = {}
-    for k, v in obj.items():
-      tmp1 = {f"{k}":v}
-      tmp0.update(tmp1.items())
-    # self.events[f"{hashlib.sha256(str(obj).encode()).hexdigest()}"] = tmp0
-    self.events[f"{k}"] = tmp0
-
-  def get_results(self, num_trials):
-    # sim_test(f"{type(self)}::get_results(self, num_trials):")
-    results = {}
-    for k, dict in self.events.items():
-      for k1, dict1 in dict.items():
-        # results[f"{dict1["state"]}-{k}"] = 0
-        results[f"{dict1["state"]}"] = 0
-
-    ### DEBUG
-    # print(f"results: {results}")
-
-    for _ in range(num_trials):
-      # print(f"Doing results")
-      for event_name, probability in self.events.items():
-        random_number = random.random()
-        cumulative_probability = 0
-        # print(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
-        for ref, dict in probability.items():
-          # print(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
-          cumulative_probability += dict["probability"]
-          if random_number <= cumulative_probability:
-            # results[f"{dict["state"]}-{event_name}"] += 1
-            results[f"{dict["state"]}"] += 1
-            break
-
-    return results
-
-  def simulate(self, num_trials):
-    results = {}
-    for i in range(0, num_trials):
-      results[i] = self.get_results(num_trials)
-    return results
 
 ######
 ###### StatesSimulator
@@ -378,6 +324,61 @@ class StatesSimulator(ProbabilisticSimulator):
           if random_number <= cumulative_probability:
             # results[f"{dict["state"]}-{event_name}"] += 1
             results[ref] += 1
+            break
+
+    return results
+
+  def simulate(self, num_trials):
+    results = {}
+    for i in range(0, num_trials):
+      results[i] = self.get_results(num_trials)
+    return results
+  
+######
+###### NamedStatesSimulator
+######
+class NamedStatesSimulator(ProbabilisticSimulator):
+  def __init__(self, states={}):
+    super().__init__()
+    # print(f"*** {type(self)}::constructor")
+
+    self.states = states
+    # print(f"self.states length: {len(self.states)}")
+    self.add_event(states)
+    # print(f"self.events length: {len(self.events)}")
+    # print(f"self.events: {self.events}")
+
+  def add_event(self, obj, probability=None):
+    tmp0 = {}
+    for k, v in obj.items():
+      tmp1 = {f"{k}":v}
+      tmp0.update(tmp1.items())
+    # self.events[f"{hashlib.sha256(str(obj).encode()).hexdigest()}"] = tmp0
+    self.events[f"{k}"] = tmp0
+
+  def get_results(self, num_trials):
+    # sim_test(f"{type(self)}::get_results(self, num_trials):")
+    results = {}
+    for k, dict in self.events.items():
+      for k1, dict1 in dict.items():
+        # results[f"{dict1["state"]}-{k}"] = 0
+        results[f"{dict1["state"]}"] = 0
+
+    ### DEBUG
+    # print(f"results: {results}")
+
+    for _ in range(num_trials):
+      # print(f"Doing results")
+      for event_name, probability in self.events.items():
+        random_number = random.random()
+        cumulative_probability = 0
+        # print(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
+        for ref, dict in probability.items():
+          # print(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
+          cumulative_probability += dict["probability"]
+          if random_number <= cumulative_probability:
+            # results[f"{dict["state"]}-{event_name}"] += 1
+            results[f"{dict["state"]}"] += 1
             break
 
     return results
