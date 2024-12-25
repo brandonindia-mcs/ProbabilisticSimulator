@@ -75,11 +75,11 @@ class ProbabilisticSimulator:
     return results
 
 ######
-###### ObjectSimulator
+###### BinarySimulator
 ###### n IS THE NUMBER OF NEW OBJECTS TO CREATE,
 ###### AND RUN THE SIMULATION ON WITH PROBABILITY
 ###### EQUALLY DISTRIBUTED
-class ObjectSimulator(ProbabilisticSimulator):
+class BinarySimulator(ProbabilisticSimulator):
   def __init__(self, n=1):
     super().__init__()
     self.setup(n)
@@ -96,7 +96,7 @@ class ObjectSimulator(ProbabilisticSimulator):
 ######
 ###### BitSimulator
 ######
-class BitSimulator(ObjectSimulator):
+class BitSimulator(BinarySimulator):
   def __init__(self, n=1):
     super().__init__(n)
 

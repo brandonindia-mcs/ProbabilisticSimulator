@@ -11,10 +11,9 @@ def is_positive_int(value):
 
 def print_object(object):
     print("object is:"+str(object.get_state()))
-
-if __name__ == "__main__":
+    
+def testing_round_1():
     all_positive_ints = True
-
     sim_test("CONTROL BASE TEST: ProbabilisticSimulator")
     simulator = ProbabilisticSimulator()
     simulator.add_event("Heads", 0.5)
@@ -48,7 +47,7 @@ if __name__ == "__main__":
 
     if all_positive_ints:
         print("All arguments are positive integers.")
-    
+
     sim_test("OBJECT CUSTOM PRINT")
     obj = SimObject(name="object1")
     print(obj)
@@ -59,8 +58,8 @@ if __name__ == "__main__":
     print(type(obj))
     print(isinstance(obj, SimObject))
 
-    sim_test("ObjectSimulator")
-    object_simulator = ObjectSimulator(NUMBER_OF_OBJECTS_UNDER_TEST)
+    sim_test("BinarySimulator")
+    object_simulator = BinarySimulator(NUMBER_OF_OBJECTS_UNDER_TEST)
     print(object_simulator.simulate(NUMBER_OF_SIMULATIONS))
 
     sim_test("BIT STATE")
@@ -93,7 +92,7 @@ if __name__ == "__main__":
     # print(results)
 
     for state, result in results.items():
-      print(f"state: {state} result: {result}")
+        print(f"state: {state} result: {result}")
 
     sim_test("TRES SIMULATOR")
     tres_sim = TresSimulator(5)
@@ -102,4 +101,20 @@ if __name__ == "__main__":
     # print(results)
 
     for state, result in results.items():
-      print(f"state: {state} result: {result}")
+        print(f"state: {state} result: {result}")
+        
+if __name__ == "__main__":
+    testing_round_1()
+
+    # sim_test("STATES SIMULATOR")
+    # states_sim = StatesSimulator(5, {
+    #   0:{"state":"STATE_ZERO","probability":.10},
+    #   1:{"state":"STATE_ONE","probability":.20},
+    #   2:{"state":"STATE_TWO","probability":.70}
+    # })
+    # results = states_sim.simulate(1000)
+    # print("Results:")
+    # # print(results)
+
+    # for state, result in results.items():
+    #   print(f"state: {state} result: {result}")
