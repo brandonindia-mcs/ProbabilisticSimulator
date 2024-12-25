@@ -337,6 +337,7 @@ class NamedStatesSimulator(StatesSimulator):
     for k, dict in self.events.items():
       for k1, dict1 in dict.items():
         results[f"{dict1["state"]}"] = 0
+        # results[f"{dict1["state"]}-{dict1["probability"]*100}"] = 0
 
     ### DEBUG
     # print(f"results: {results}")
@@ -345,10 +346,12 @@ class NamedStatesSimulator(StatesSimulator):
       for event_name, probability in self.events.items():
         random_number = random.random()
         cumulative_probability = 0
-        for ref, dict in probability.items():
-          cumulative_probability += dict["probability"]
+        for ref, dict1 in probability.items():
+          cumulative_probability += dict1["probability"]
           if random_number <= cumulative_probability:
-            results[f"{dict["state"]}"] += 1
+            results[f"{dict1["state"]}"] += 1
+            # results[f"{dict1["state"]}-{dict1["probability"]*100}"] += 1
             break
 
     return results
+

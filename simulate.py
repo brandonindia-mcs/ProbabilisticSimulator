@@ -114,6 +114,18 @@ if __name__ == "__main__":
     results1 = states_sim.simulate(2)
     print(f"Results:\n\t{results1}")
 
+    sim_test("STATES SIMULATOR")
+    states_sim = StatesSimulator({
+      0:{"probability":.10},
+      1:{"probability":.20},
+      2:{"probability":.15},
+      3:{"probability":.12},
+      4:{"probability":.13},
+      5:{"probability":.30}
+    })
+    results1 = states_sim.simulate(3)
+    print(f"Results:\n\t{results1}")
+
     for sim_run, result1 in results1.items():
       print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result1}")
 
