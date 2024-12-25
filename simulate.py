@@ -105,18 +105,6 @@ def testing_round_1():
 if __name__ == "__main__":
     # testing_round_1()
 
-    sim_test("NAMED STATES SIMULATOR")
-    named_states_sim = NamedStatesSimulator({
-      0:{"state":"STATE_ZERO","probability":.10},
-      1:{"state":"STATE_ONE","probability":.20},
-      2:{"state":"STATE_TWO","probability":.70}
-    })
-    results = named_states_sim.simulate(2)
-    print(f"Results:\n\t{results}")
-
-    for sim_run, result in results.items():
-      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
-
     sim_test("STATES SIMULATOR")
     states_sim = StatesSimulator({
       0:{"probability":.10},
@@ -128,3 +116,15 @@ if __name__ == "__main__":
 
     for sim_run, result1 in results1.items():
       print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result1}")
+
+    sim_test("NAMED STATES SIMULATOR")
+    named_states_sim = NamedStatesSimulator({
+      0:{"state":"STATE_ZERO","probability":.10},
+      1:{"state":"STATE_ONE","probability":.20},
+      2:{"state":"STATE_TWO","probability":.70}
+    })
+    results = named_states_sim.simulate(2)
+    print(f"Results:\n\t{results}")
+
+    for sim_run, result in results.items():
+      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
