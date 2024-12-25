@@ -89,7 +89,7 @@ def testing_round_1():
     bit_sim = BitSimulator(5)
     results = bit_sim.simulate(1000)
     print("Results:")
-    # print(results)
+    print(results)
 
     for state, result in results.items():
         print(f"state: {state} result: {result}")
@@ -97,9 +97,8 @@ def testing_round_1():
     sim_test("TRES SIMULATOR")
     tres_sim = TresSimulator(5)
     results = tres_sim.simulate(1000)
+    print(results)
     print("Results:")
-    # print(results)
-
     for state, result in results.items():
         print(f"state: {state} result: {result}")
         
