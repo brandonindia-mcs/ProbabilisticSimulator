@@ -279,9 +279,9 @@ class TresObject(SimObject):
 
 import hashlib
 ######
-###### StatesSimulator
+###### NamedStatesSimulator
 ######
-class StatesSimulator(ProbabilisticSimulator):
+class NamedStatesSimulator(ProbabilisticSimulator):
   def __init__(self, states={}):
     super().__init__()
     # print(f"*** {type(self)}::constructor")
@@ -332,3 +332,4 @@ class StatesSimulator(ProbabilisticSimulator):
     for i in range(0, num_trials):
       results[i] = self.get_results(num_trials)
     return results
+

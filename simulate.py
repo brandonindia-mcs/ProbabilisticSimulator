@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # testing_round_1()
 
     sim_test("STATES SIMULATOR")
-    states_sim = StatesSimulator({
+    states_sim = NamedStatesSimulator({
       0:{"state":"STATE_ZERO","probability":.10},
       1:{"state":"STATE_ONE","probability":.20},
       2:{"state":"STATE_TWO","probability":.70}
