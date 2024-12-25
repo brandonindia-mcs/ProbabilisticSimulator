@@ -151,7 +151,10 @@ if __name__ == "__main__":
       {"probability":.06},
       {"probability":.22}
     ])
-    results = states_sim.simulate(10000)
-    print(f"Results:\n\t{results}")
-    for sim_run, result in results.items():
-      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
+    try:
+        results = states_sim.simulate(10000)
+    except ValueError as error:
+        raise
+    print(f"Results:\n\t{results}\n")
+    for state, result in results.items():
+      print(f"\tstate {state}:\t{result}")

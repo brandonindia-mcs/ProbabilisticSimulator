@@ -376,9 +376,13 @@ class StatesListSimulator(ProbabilisticSimulator):
     print(f"self.events: {self.events}")
 
     results = {}
+    cumulative_probability = 0
     for k, dict in self.events.items():
       for k1, v1 in dict.items():
+        cumulative_probability += v1
         results[f"{k}-{100*v1}"] = 0
+    if cumulative_probability != 1.0:
+      raise ValueError(f"list of probabilities does not total 1.0: {cumulative_probability}")
 
     ### DEBUG
     print(f"results initialized: {results}")
