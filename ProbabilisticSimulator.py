@@ -36,15 +36,18 @@ class ProbabilisticSimulator:
       num_trials: The number of trials to run.
 
     Returns:
-      A dictionary where the keys are event names and the values are the number of times
-      each event occurred.
+      results from get_results
     """
 
     return self.get_results(num_trials)
   
   def get_results(self, num_trials):
     sim_test(f"{type(self)}::get_results(self, num_trials):")
-
+    """
+    Returns:
+      A dictionary where the keys are event names and the values are the number of times
+      each event occurred.
+    """
     ### DEBUG
     # print(f"events {self.events}")
 
@@ -89,28 +92,6 @@ class ObjectSimulator(ProbabilisticSimulator):
 
   def add_event(self, object, probability):
     self.events[object.NAME] = probability
-
-######
-###### SimObject
-######
-class SimObject:
-  def __init__(self, state=None, name="object"):
-    self.ERROR_MESSAGE = "Invalid state."
-    self.state = state
-    self.NAME : Final = name
-
-  def __str__(self):
-      return f"object {type(self)} is: {self.NAME} is: {self.get_state()}"
-  
-  def print(self):
-      print(f"object {type(self)} is: {self.NAME} is: {self.get_state()}")
-      return self
-
-  def get_state(self):
-      return self.state
-
-  def set_state(self, state):
-    self.state = state
 
 ######
 ###### BitSimulator
@@ -178,6 +159,39 @@ class BitSimulator(ObjectSimulator):
     # print(f"{type(self)}::get_results: returning results: {results}")
 
     return results
+
+######
+###### TresSimulator
+######
+class TresSimulator(BitSimulator):
+  def __init__(self, n=1):
+    super().__init__(n)
+
+  def setup(self, n):
+    for i in range(0, n):
+      self.add_event(TresObject(name="tres-"+str(i)))
+
+######
+###### SimObject
+######
+class SimObject:
+  def __init__(self, state=None, name="object"):
+    self.ERROR_MESSAGE = "Invalid state."
+    self.state = state
+    self.NAME : Final = name
+
+  def __str__(self):
+      return f"object {type(self)} is: {self.NAME} is: {self.get_state()}"
+  
+  def print(self):
+      print(f"object {type(self)} is: {self.NAME} is: {self.get_state()}")
+      return self
+
+  def get_state(self):
+      return self.state
+
+  def set_state(self, state):
+    self.state = state
   
 ######
 ###### BitObject
@@ -262,21 +276,3 @@ class TresObject(SimObject):
     if self.state not in [0, 1, 2]:
         raise ValueError(self.ERROR_MESSAGE)
     return self
-
-######
-###### TresSimulator
-######
-class TresSimulator(BitSimulator):
-  def __init__(self, n=1):
-    super().__init__(n)
-
-  def setup(self, n):
-    for i in range(0, n):
-      self.add_event(TresObject(name="tres-"+str(i)))
-  
-######
-###### QuantumSimulator
-######
-class QuantumSimulator(ProbabilisticSimulator):
-  def __init__(self):
-    self.events = {}
