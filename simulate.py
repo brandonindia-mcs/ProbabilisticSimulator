@@ -137,6 +137,21 @@ if __name__ == "__main__":
     })
     results = named_states_sim.simulate(2)
     print(f"Results:\n\t{results}")
+    for sim_run, result in results.items():
+      print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
 
+    sim_test("STATES IN LIST SIMULATOR")
+    states_sim = StatesListSimulator([
+      {"probability":.10},
+      {"probability":.20},
+      {"probability":.15},
+      {"probability":.12},
+      {"probability":.13},
+      {"probability":.02},
+      {"probability":.06},
+      {"probability":.22}
+    ])
+    results = states_sim.simulate(10000)
+    print(f"Results:\n\t{results}")
     for sim_run, result in results.items():
       print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")

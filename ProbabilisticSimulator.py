@@ -277,8 +277,6 @@ class TresObject(SimObject):
         raise ValueError(self.ERROR_MESSAGE)
     return self
 
-import hashlib
-
 ######
 ###### StatesSimulator
 ######
@@ -337,7 +335,6 @@ class NamedStatesSimulator(StatesSimulator):
     for k, dict in self.events.items():
       for k1, dict1 in dict.items():
         results[f"{dict1["state"]}"] = 0
-        # results[f"{dict1["state"]}-{dict1["probability"]*100}"] = 0
 
     ### DEBUG
     # print(f"results: {results}")
@@ -350,8 +347,50 @@ class NamedStatesSimulator(StatesSimulator):
           cumulative_probability += dict1["probability"]
           if random_number <= cumulative_probability:
             results[f"{dict1["state"]}"] += 1
-            # results[f"{dict1["state"]}-{dict1["probability"]*100}"] += 1
             break
 
     return results
 
+######
+###### StatesListSimulator
+######
+class StatesListSimulator(ProbabilisticSimulator):
+  def __init__(self, states=[]):
+    super().__init__()
+    # print(f"*** {type(self)}::constructor")
+    self.states = states
+    self.add_event(states)
+
+  def add_event(self, list, probability=None):
+    for obj in list:
+      tmp1 = {"probability": obj["probability"]}
+      self.events[f"{id(tmp1)}"] = tmp1
+
+    # print(f"self.events: {self.events}")
+
+  def simulate(self, num_trials):
+    return self.get_results(num_trials)
+
+  def get_results(self, num_trials):
+    ### DEBUG
+    print(f"self.events: {self.events}")
+
+    results = {}
+    for k, dict in self.events.items():
+      for k1, v1 in dict.items():
+        results[f"{k}-{100*v1}"] = 0
+
+    ### DEBUG
+    print(f"results initialized: {results}")
+
+    for _ in range(num_trials):
+      random_number = random.random()
+      cumulative_probability = 0
+      for event_name, probability in self.events.items():
+        cumulative_probability += probability["probability"]
+        if random_number <= cumulative_probability:
+          results[f"{event_name}-{100*probability["probability"]}"] += 1
+          break
+
+    return results
+  
