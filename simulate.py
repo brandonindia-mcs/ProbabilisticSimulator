@@ -1,4 +1,15 @@
-from ProbabilisticSimulator import *
+# from ProbabilisticSimulator import *
+from ProbabilisticSimulator import ProbabilisticSimulator
+from ProbabilisticSimulator import BinarySimulator
+from ProbabilisticSimulator import BitSimulator
+from ProbabilisticSimulator import CoinSimulator
+from ProbabilisticSimulator import TresSimulator
+from ProbabilisticSimulator import StatesListSimulator
+from ProbabilisticSimulator import NamedStatesSimulator
+from ProbabilisticSimulator import StatesSimulator
+from ProbabilisticSimulator import SimObject
+from ProbabilisticSimulator import BitObject
+from ProbabilisticSimulator import BitObject
 import sys
 import logging
 logging.basicConfig(filename=f"{__name__}.log", level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -171,13 +182,13 @@ if __name__ == "__main__":
     print("NUMBER_OF_OBJECTS:" + str(NUMBER_OF_OBJECTS))
     print("NUMBER_OF_SIMULATIONS:" + str(NUMBER_OF_SIMULATIONS))
 
-    # testing_round_1()
-    # bit_tests()
-    # bit_simulator(1,10)
+    testing_round_1()
+    bit_tests()
+    bit_simulator(1,10)
     coin_simulator(NUMBER_OF_OBJECTS,NUMBER_OF_SIMULATIONS)
-    # tres_simulator()
-    # states_simulator()
-    # named_states_simulator()
-    # state_in_list_simulator()
+    tres_simulator()
+    states_simulator()
+    named_states_simulator()
+    state_in_list_simulator()
 
 
