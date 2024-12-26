@@ -1,7 +1,9 @@
 from ProbabilisticSimulator import *
 import sys
+import logging
+logging.basicConfig(filename=f"{__name__}.log", level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 def sim_test(test_id="TEST"):
-    print(f"\n### simulate.py ### {test_id} test ######################")
+    logging.info(f"\n### simulate.py ### {test_id} test ######################")
 def is_positive_int(value):
     try:
         num = int(value)
@@ -20,8 +22,7 @@ def testing_round_1():
     simulator.add_event("Tails", 0.5)
 
     results = simulator.simulate(100)
-    print("Results:")
-    print(results)
+    logging.debug(f"Results: {results}")
 
     sim_test("POSITIVE INTEGERS")
     for arg in sys.argv[1:]:  # Skip the script name (sys.argv[0])
@@ -73,21 +74,21 @@ def bit_tests():
 def bit_simulator(number_of_bits=1, number_of_tests=10):
     sim_test("BIT SIMULATOR")
     results = BitSimulator(number_of_bits).simulate(number_of_tests)
-    print(f"Results: {results}")
+    logging.debug(f"Results: {results}")
     for state, result in results.items():
         print(f"state: {state} result: {result}")
 
 def coin_simulator(number_of_bits=1, number_of_tests=10):
     sim_test("COIN SIMULATOR")
     results = CoinSimulator(number_of_bits).simulate(number_of_tests)
-    print(f"Results: {results}")
+    logging.debug(f"Results: {results}")
     for state, result in results.items():
         print(f"state: {state} result: {result}")
 
 def tres_simulator():
     sim_test("TRES SIMULATOR")
     results = TresSimulator(5).simulate(10)
-    print(f"Results: {results}")
+    logging.debug(f"Results: {results}")
     for state, result in results.items():
         print(f"state: {state} result: {result}")
         
@@ -99,7 +100,7 @@ def states_simulator():
       2:{"probability":.70}
     })
     results = states_sim.simulate(2)
-    print(f"Results:\n\t{results}")
+    logging.debug(f"Results:\n\t{results}")
     for sim_run, result in results.items():
       print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
 
@@ -113,7 +114,7 @@ def states_simulator():
       5:{"probability":.30}
     })
     results = states_sim.simulate(3)
-    print(f"Results:\n\t{results}")
+    logging.debug(f"Results:\n\t{results}")
     for sim_run, result in results.items():
       print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
 
@@ -127,7 +128,7 @@ def named_states_simulator():
       2:{"state":"STATE_TWO","probability":.70}
     })
     results = named_states_sim.simulate(2)
-    print(f"Results:\n\t{results}")
+    logging.debug(f"Results:\n\t{results}")
     for sim_run, result in results.items():
       print(f"\n\tsim_run: {sim_run}\n\t\tresult: {result}")
 
@@ -149,7 +150,7 @@ def state_in_list_simulator():
         results = states_sim.simulate(10000)
     except ValueError as error:
         raise
-    print(f"Results:\n\t{results}\n")
+    logging.debug(f"Results:\n\t{results}\n")
     for state, result in results.items():
       print(f"\tstate {state}:\t{result}")
     return

@@ -11,7 +11,7 @@ def sim_test(test_id="TEST"):
 class ProbabilisticSimulator:
 
   # Configure the logging module
-  logging.basicConfig(filename=f"{__name__}.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  logging.basicConfig(filename=f"{__name__}.log", level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
   # Log a message
   # logging.debug("This is a debug message")
