@@ -2,3 +2,4 @@
 **/.q
 **/__pycache__
 **/*.code-workspace
+*.log

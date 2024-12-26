@@ -1,19 +1,32 @@
 import random
+import logging
 from types import MappingProxyType
 from typing import Final
 
 def sim_test(test_id="TEST"):
-    print(f"\n### ProbabilisticSimulator.py ### {test_id} #******************#")
+    logging.info(f"\n### ProbabilisticSimulator.py ### {test_id} #******************#")
 ######
 ###### ProbabilisticSimulator
 ######
 class ProbabilisticSimulator:
+
+  # Configure the logging module
+  logging.basicConfig(filename=f"{__name__}.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+  # Log a message
+  # logging.debug("This is a debug message")
+  # logging.info("This is an info message")
+  # logging.warning("This is a warning message")
+  # logging.error("This is an error message")
+  # logging.critical("This is a critical message")
+
   """
   A simple probabilistic simulator that allows you to define events with probabilities
   and simulate their occurrence.
   """
 
   def __init__(self):
+    # self.logger = logging.getLogger(__name__)
     self.events = {}
 
   def add_event(self, event_name, probability):
@@ -49,28 +62,27 @@ class ProbabilisticSimulator:
       each event occurred.
     """
     ### DEBUG
-    # print(f"events {self.events}")
+    logging.debug(f"events {self.events}")
 
     # INITIALIZE RESULTS, SET KEYS TO 0 FOR THE SIZE OF EVENTS
     results = {event_name: 0 for event_name in self.events}
 
     ### DEBUG
-    # print(f"{type(self)}::get_results: initialized results: {results}")
+    logging.debug(f"{type(self)}::get_results: initialized results: {results}")
 
     for _ in range(num_trials):
       random_number = random.random()
       cumulative_probability = 0
-      # print(f"Doing results")
+      logging.debug(f"Doing results")
       for event_name, probability in self.events.items():
-        # print(f"Result\n\tevent_name: {event_name}\n\tprobabiliity: {probability}")
+        logging.debug(f"Result\n\tevent_name: {event_name}\n\tprobabiliity: {probability}")
         cumulative_probability += probability
         if random_number <= cumulative_probability:
           results[event_name] += 1
           break
-      # print(f"cumulative_probability: {cumulative_probability}")
 
     ### DEBUG
-    # print(f"returning results: {results}")
+    logging.debug(f"returning results: {results}")
     
     return results
 
@@ -86,7 +98,7 @@ class BinarySimulator(ProbabilisticSimulator):
 
   def setup(self, n):
     probability = 100/n/100
-    print("Equal probability: "+str(probability))
+    logging.info("Equal probability: "+str(probability))
     for i in range(0, n):
       self.add_event(SimObject(name="object-"+str(i)), probability)
 
@@ -102,28 +114,31 @@ class BitSimulator(BinarySimulator):
 
   def setup(self, n):
     ### DEBUG
-    # print(f"{type(self)}::setup(self, n)")
+    logging.debug(f"{type(self)}::setup(self, n)")
 
     for i in range(0, n):
       self.add_event(BitObject(name="bit-"+str(i)))
 
+    ### DEBUG
+    logging.debug(f"{type(self)}::setup(self, n): events {self.events}")
+
   def add_event(self, bit, probability=None):
     ### DEBUG
-    # print(f"{type(self)}::add_event: adding events for: {bit}")
+    logging.debug(f"{type(self)}::add_event: adding events for: {bit}")
 
     tmp0 = {}
     for k, v in bit.states.items():
       ### DEBUG
-      # print(f"k is {k} v is {v}")
+      logging.debug(f"k is {k} v is {v}")
 
       tmp1 = {f"{bit.NAME}-{k}":v}
       tmp0.update(tmp1.items())
 
       ### DEBUG
-      # print(f"tmp1: {tmp1}")
+      logging.debug(f"tmp1: {tmp1}")
 
     ### DEBUG
-    # print(f"tmp0: {tmp0}")
+    logging.debug(f"tmp0: {tmp0}")
 
     self.events[f"{bit.NAME}"] = tmp0
 
@@ -131,32 +146,39 @@ class BitSimulator(BinarySimulator):
     sim_test(f"{type(self)}::get_results(self, num_trials):")
 
     ### DEBUG
-    # print(f"{type(self)}::get_results: events {self.events}")
+    logging.debug(f"{type(self)}::get_results: events {self.events}")
 
     # INITIALIZE RESULTS, SET KEYS TO 0 FOR THE SIZE OF EVENTS
-    d = {}
+    tmp = {}
     for k1 in self.events.keys():
-      d.update(self.events[k1])
-    results = {event_name: 0 for event_name in d.keys()}
+      tmp.update(self.events[k1])
+    results = {event_name: 0 for event_name in tmp.keys()}
 
     ### DEBUG
-    # print(f"{type(self)}::get_results: initialized results: {results}")
+    logging.debug(f"{type(self)}::get_results: initialized results: {results}")
 
     for _ in range(num_trials):
-      # print(f"Doing results")
       for event_name, probability in self.events.items():
         random_number = random.random()
         cumulative_probability = 0
-        # print(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
+        logging.info(f"\nrandom_number: {round(random_number, 2)}")
+        logging.info(f"cumulative_probability: {cumulative_probability}")
+        logging.debug(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
         for ref, dict in probability.items():
-          # print(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
+          logging.debug(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
           cumulative_probability += dict["probability"]
+          logging.debug(f"cumulative_probability: {cumulative_probability}")
+          logging.info(f"is: {round(random_number, 2)} <= {cumulative_probability}: {random_number <= cumulative_probability}")
           if random_number <= cumulative_probability:
             results[ref] += 1
+            logging.info(f"{event_name} is {dict["state"]}")
             break
 
+      ### DEBUG
+      logging.debug(f"{type(self)}::get_results: results:\n\t{results}")
+
     ### DEBUG
-    # print(f"{type(self)}::get_results: returning results: {results}")
+    logging.debug(f"{type(self)}::get_results: returning results: {results}")
 
     return results
 
@@ -192,6 +214,10 @@ class SimObject:
 
   def set_state(self, state):
     self.state = state
+
+  ### MOVE TO NEW "PARENT CLASS"
+  def set_states(self, states):
+    self.states = states
   
 ######
 ###### BitObject
@@ -202,18 +228,15 @@ class BitObject(SimObject):
     self.set_state(state)
 
     ### DEBUG
-    print(f"{type(self)} state: {self.state}")
+    logging.debug(f"{type(self)} state: {self.state}")
 
-    if self.state not in [0, 1]:
-      raise ValueError("Invalid state. State must be 0 or 1.")
-
-    self.states = MappingProxyType({
+    self.set_states(MappingProxyType({
       0:{"state":"Off","probability":.5},
       1:{"state":"On","probability":.5}
-    })
+    }))
 
     ### DEBUG
-    # print(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
+    logging.debug(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
 
   def __str__(self):
       return f"object {type(self)} {self.NAME} is: {self.states.get(self.get_state())}"
@@ -232,9 +255,12 @@ class BitObject(SimObject):
 
   def set_state(self, state):
     super().set_state(state)
+    self.validate_state()
+    return self
+
+  def validate_state(self):
     if self.state not in [0, 1]:
         raise ValueError("Invalid state. State must be 0 or 1.")
-    return self
 
   def toggle(self):
     self.state=int(bin(self.state ^ 1), 2)
@@ -249,20 +275,20 @@ class TresObject(SimObject):
     self.set_state(state)
 
     ### DEBUG
-    print(f"{type(self)} state: {self.state}")
+    logging.debug(f"{type(self)} state: {self.state}")
 
     self.ERROR_MESSAGE = "Invalid state. State must be 0, 1, or 2."
     if self.state not in [0, 1, 2]:
       raise ValueError(self.ERROR_MESSAGE)
 
-    self.states = MappingProxyType({
+    self.set_states(MappingProxyType({
       0:{"state":"STATE_ZERO","probability":.33},
       1:{"state":"STATE_ONE","probability":.34},
       2:{"state":"STATE_TWO","probability":.33}
-    })
+    }))
 
     ### DEBUG
-    # print(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
+    logging.debug(f"{type(self)}::init: {self.NAME} number of states: {len(self.states)}")
 
   def __str__(self):
       return f"object {type(self)} {self.NAME} is: {self.states.get(self.get_state())}"
@@ -281,10 +307,11 @@ class TresObject(SimObject):
 ###### StatesSimulator
 ######
 class StatesSimulator(ProbabilisticSimulator):
-  def __init__(self, states={}):
+  def __init__(self, states={}, bit_count=1):
     super().__init__()
-    # print(f"*** {type(self)}::constructor")
+    logging.debug(f"*** {type(self)}::constructor")
     self.states = states
+    self.bit_count = bit_count
     self.add_event(states)
 
   def add_event(self, obj, probability=None):
@@ -301,7 +328,7 @@ class StatesSimulator(ProbabilisticSimulator):
         results[k1] = 0
 
     ### DEBUG
-    # print(f"results: {results}")
+    logging.debug(f"results: {results}")
 
     for _ in range(num_trials):
       for event_name, probability in self.events.items():
@@ -325,9 +352,9 @@ class StatesSimulator(ProbabilisticSimulator):
 ###### NamedStatesSimulator
 ######
 class NamedStatesSimulator(StatesSimulator):
-  def __init__(self, states={}):
-    super().__init__(states)
-    # print(f"*** {type(self)}::constructor")
+  def __init__(self, states={}, bit_count=1):
+    super().__init__(states, bit_count)
+    logging.debug(f"*** {type(self)}::constructor")
 
   def get_results(self, num_trials):
     # sim_test(f"{type(self)}::get_results(self, num_trials):")
@@ -337,7 +364,8 @@ class NamedStatesSimulator(StatesSimulator):
         results[f"{dict1["state"]}"] = 0
 
     ### DEBUG
-    # print(f"results: {results}")
+    logging.debug(f"self.events: {self.events}")
+    logging.debug(f"results initialized: {results}")
 
     for _ in range(num_trials):
       for event_name, probability in self.events.items():
@@ -357,7 +385,7 @@ class NamedStatesSimulator(StatesSimulator):
 class StatesListSimulator(ProbabilisticSimulator):
   def __init__(self, states=[]):
     super().__init__()
-    # print(f"*** {type(self)}::constructor")
+    logging.debug(f"*** {type(self)}::constructor")
     self.states = states
     self.add_event(states)
 
@@ -366,14 +394,14 @@ class StatesListSimulator(ProbabilisticSimulator):
       tmp1 = {"probability": obj["probability"]}
       self.events[f"{id(tmp1)}"] = tmp1
 
-    # print(f"self.events: {self.events}")
+    logging.debug(f"self.events: {self.events}")
 
   def simulate(self, num_trials):
     return self.get_results(num_trials)
 
   def get_results(self, num_trials):
     ### DEBUG
-    print(f"self.events: {self.events}")
+    logging.debug(f"self.events: {self.events}")
 
     results = {}
     cumulative_probability = 0
@@ -385,7 +413,7 @@ class StatesListSimulator(ProbabilisticSimulator):
       raise ValueError(f"list of probabilities does not total 1.0: {cumulative_probability}")
 
     ### DEBUG
-    print(f"results initialized: {results}")
+    logging.debug(f"results initialized: {results}")
 
     for _ in range(num_trials):
       random_number = random.random()
