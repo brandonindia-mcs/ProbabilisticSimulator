@@ -23,21 +23,6 @@ def testing_round_1():
     print("Results:")
     print(results)
 
-    sim_test("ARGUMENTS")
-    print("Number of arguments:", len(sys.argv))
-    print("Argument List:", sys.argv)
-
-    try:
-        print("sys.argv[1]:"+sys.argv[1])
-        print("sys.argv[2]:"+sys.argv[2])
-        NUMBER_OF_OBJECTS_UNDER_TEST = int(sys.argv[1])
-        NUMBER_OF_SIMULATIONS = int(sys.argv[2])
-    except:
-        NUMBER_OF_OBJECTS_UNDER_TEST = 19
-        NUMBER_OF_SIMULATIONS = 5000
-    print("NUMBER_OF_OBJECTS_UNDER_TEST:" + str(NUMBER_OF_OBJECTS_UNDER_TEST))
-    print("NUMBER_OF_SIMULATIONS:" + str(NUMBER_OF_SIMULATIONS))
-
     sim_test("POSITIVE INTEGERS")
     for arg in sys.argv[1:]:  # Skip the script name (sys.argv[0])
         if not is_positive_int(arg):
@@ -59,9 +44,10 @@ def testing_round_1():
     print(isinstance(obj, SimObject))
 
     sim_test("BinarySimulator")
-    object_simulator = BinarySimulator(NUMBER_OF_OBJECTS_UNDER_TEST)
+    object_simulator = BinarySimulator(NUMBER_OF_OBJECTS)
     print(object_simulator.simulate(NUMBER_OF_SIMULATIONS))
 
+def bit_tests():
     sim_test("BIT STATE")
     b = BitObject().print()
     b.set_on().print()
@@ -84,21 +70,24 @@ def testing_round_1():
     b.set_state(1).print()
     print(f"bit state is {b.get_state()}")
 
-
+def bit_simulator(number_of_bits=1, number_of_tests=10):
     sim_test("BIT SIMULATOR")
-    bit_sim = BitSimulator(5)
-    results = bit_sim.simulate(1000)
-    print("Results:")
-    print(results)
-
+    results = BitSimulator(number_of_bits).simulate(number_of_tests)
+    print(f"Results: {results}")
     for state, result in results.items():
         print(f"state: {state} result: {result}")
 
+def coin_simulator(number_of_bits=1, number_of_tests=10):
+    sim_test("COIN SIMULATOR")
+    results = CoinSimulator(number_of_bits).simulate(number_of_tests)
+    print(f"Results: {results}")
+    for state, result in results.items():
+        print(f"state: {state} result: {result}")
+
+def tres_simulator():
     sim_test("TRES SIMULATOR")
-    tres_sim = TresSimulator(5)
-    results = tres_sim.simulate(1000)
-    print(results)
-    print("Results:")
+    results = TresSimulator(5).simulate(10)
+    print(f"Results: {results}")
     for state, result in results.items():
         print(f"state: {state} result: {result}")
         
@@ -166,9 +155,28 @@ def state_in_list_simulator():
     return
 
 if __name__ == "__main__":
+    sim_test("ARGUMENTS")
+    print("Number of arguments:", len(sys.argv))
+    print("Argument List:", sys.argv)
+
+    try:
+        print("sys.argv[1]:"+sys.argv[1])
+        print("sys.argv[2]:"+sys.argv[2])
+        NUMBER_OF_OBJECTS = int(sys.argv[1])
+        NUMBER_OF_SIMULATIONS = int(sys.argv[2])
+    except:
+        NUMBER_OF_OBJECTS = 1
+        NUMBER_OF_SIMULATIONS = 10
+    print("NUMBER_OF_OBJECTS:" + str(NUMBER_OF_OBJECTS))
+    print("NUMBER_OF_SIMULATIONS:" + str(NUMBER_OF_SIMULATIONS))
+
     # testing_round_1()
+    # bit_tests()
+    # bit_simulator(1,10)
+    coin_simulator(NUMBER_OF_OBJECTS,NUMBER_OF_SIMULATIONS)
+    # tres_simulator()
     # states_simulator()
-    named_states_simulator()
-    state_in_list_simulator()
+    # named_states_simulator()
+    # state_in_list_simulator()
 
 
