@@ -11,7 +11,8 @@ def sim_test(test_id="TEST"):
 class ProbabilisticSimulator:
 
   # Configure the logging module
-  logging.basicConfig(filename=f"{__name__}.log", level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+  FORMAT='%(asctime)s:%(levelname)8s:<%(filename)s:%(lineno)s>%(funcName)s()] %(message)s'
+  logging.basicConfig(filename=f"{__name__}.log", level=logging.DEBUG, format=FORMAT)
 
   # Log a message
   # logging.debug("This is a debug message")
@@ -26,7 +27,7 @@ class ProbabilisticSimulator:
   """
 
   def __init__(self):
-    # self.logger = logging.getLogger(__name__)
+    self.logger = logging.getLogger(__name__)
     self.events = {}
 
   def add_event(self, event_name, probability):
@@ -114,31 +115,31 @@ class BitSimulator(BinarySimulator):
 
   def setup(self, n):
     ### DEBUG
-    logging.debug(f"{type(self)}::setup(self, n)")
+    self.logger.debug(f"{type(self)}::setup(self, n)")
 
     for i in range(0, n):
       self.add_event(BitObject(name="bit-"+str(i)))
 
     ### DEBUG
-    logging.debug(f"{type(self)}::setup(self, n): events {self.events}")
+    self.logger.debug(f"{type(self)}::setup(self, n): events {self.events}")
 
   def add_event(self, bit, probability=None):
     ### DEBUG
-    logging.debug(f"{type(self)}::add_event: adding events for: {bit}")
+    self.logger.debug(f"{type(self)}::add_event: adding events for: {bit}")
 
     tmp0 = {}
     for k, v in bit.states.items():
       ### DEBUG
-      logging.debug(f"k is {k} v is {v}")
+      self.logger.debug(f"k is {k} v is {v}")
 
       tmp1 = {f"{bit.NAME}-{k}":v}
       tmp0.update(tmp1.items())
 
       ### DEBUG
-      logging.debug(f"tmp1: {tmp1}")
+      self.logger.debug(f"tmp1: {tmp1}")
 
     ### DEBUG
-    logging.debug(f"tmp0: {tmp0}")
+    self.logger.debug(f"tmp0: {tmp0}")
 
     self.events[f"{bit.NAME}"] = tmp0
 
@@ -146,7 +147,7 @@ class BitSimulator(BinarySimulator):
     sim_test(f"{type(self)}::get_results(self, num_trials):")
 
     ### DEBUG
-    logging.debug(f"{type(self)}::get_results: events {self.events}")
+    self.logger.debug(f"{type(self)}::get_results: events {self.events}")
 
     # INITIALIZE RESULTS, SET KEYS TO 0 FOR THE SIZE OF EVENTS
     tmp = {}
@@ -155,30 +156,30 @@ class BitSimulator(BinarySimulator):
     results = {event_name: 0 for event_name in tmp.keys()}
 
     ### DEBUG
-    logging.debug(f"{type(self)}::get_results: initialized results: {results}")
+    self.logger.debug(f"{type(self)}::get_results: initialized results: {results}")
 
     for _ in range(num_trials):
       for event_name, probability in self.events.items():
         random_number = random.random()
         cumulative_probability = 0
-        logging.info(f"\nrandom_number: {round(random_number, 2)}")
-        logging.info(f"cumulative_probability: {cumulative_probability}")
-        logging.debug(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
+        self.logger.info(f"\nrandom_number: {round(random_number, 2)}")
+        self.logger.info(f"cumulative_probability: {cumulative_probability}")
+        self.logger.debug(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
         for ref, dict in probability.items():
-          logging.debug(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
+          self.logger.debug(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
           cumulative_probability += dict["probability"]
-          logging.debug(f"cumulative_probability: {cumulative_probability}")
-          logging.info(f"is: {round(random_number, 2)} <= {cumulative_probability}: {random_number <= cumulative_probability}")
+          self.logger.debug(f"cumulative_probability: {cumulative_probability}")
+          self.logger.info(f"is: {round(random_number, 2)} <= {cumulative_probability}: {random_number <= cumulative_probability}")
           if random_number <= cumulative_probability:
             results[ref] += 1
-            logging.info(f"{event_name} is {dict["state"]}")
+            self.logger.info(f"{event_name} is {dict["state"]}")
             break
 
       ### DEBUG
-      logging.debug(f"{type(self)}::get_results: results:\n\t{results}")
+      self.logger.debug(f"{type(self)}::get_results: results:\n\t{results}")
 
     ### DEBUG
-    logging.debug(f"{type(self)}::get_results: returning results: {results}")
+    self.logger.debug(f"{type(self)}::get_results: returning results: {results}")
 
     return results
 
@@ -241,6 +242,7 @@ class BitObject(SimObject):
     ### DEBUG
     logging.debug(f"{type(self)} state: {self.state}")
 
+    self.ERROR_MESSAGE = "Invalid state. State must be 0 or 1"
     self.set_states(MappingProxyType({
       0:{"state":"Off","probability":.5},
       1:{"state":"On","probability":.5}
@@ -271,7 +273,7 @@ class BitObject(SimObject):
 
   def validate_state(self):
     if self.state not in [0, 1]:
-        raise ValueError("Invalid state. State must be 0 or 1.")
+      raise ValueError(self.ERROR_MESSAGE)
 
   def toggle(self):
     self.state=int(bin(self.state ^ 1), 2)
@@ -287,6 +289,7 @@ class Coin(BitObject):
     ### DEBUG
     logging.debug(f"{type(self)} state: {self.state}")
 
+    self.ERROR_MESSAGE = "Invalid state. State must be HEADS or TAILS."
     self.set_states(MappingProxyType({
       "HEADS":{"state":"heads","probability":.5},
       "TAILS":{"state":"tails","probability":.5}
@@ -302,7 +305,7 @@ class Coin(BitObject):
 
   def validate_state(self):
     if self.state not in ["HEADS", "TAILS"]:
-        raise ValueError("Invalid state. State must be HEADS or TAILS.")
+      raise ValueError(self.ERROR_MESSAGE)
 
   def toggle(self):
     if self.state == "HEADS":
@@ -321,9 +324,6 @@ class TresObject(SimObject):
     logging.debug(f"{type(self)} state: {self.state}")
 
     self.ERROR_MESSAGE = "Invalid state. State must be 0, 1, or 2."
-    if self.state not in [0, 1, 2]:
-      raise ValueError(self.ERROR_MESSAGE)
-
     self.set_states(MappingProxyType({
       0:{"state":"STATE_ZERO","probability":.33},
       1:{"state":"STATE_ONE","probability":.34},
