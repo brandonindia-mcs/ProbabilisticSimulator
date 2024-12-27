@@ -12,7 +12,7 @@ class ProbabilisticSimulator:
 
   # Configure the logging module
   FORMAT='%(asctime)s:%(levelname)8s:<%(filename)s:%(lineno)s>%(funcName)s()] %(message)s'
-  logging.basicConfig(filename=f"{__name__}.log", level=logging.DEBUG, format=FORMAT)
+  logging.basicConfig(filename=f"{__name__}.log", level=logging.ERROR, format=FORMAT)
 
   # Log a message
   # logging.debug("This is a debug message")
@@ -167,12 +167,12 @@ class BitSimulator(BinarySimulator):
         self.logger.debug(f"Result\n\tevent_name: {event_name} is a {type(event_name)}\n\tprobabiliity: {probability} is a {type(probability)}")
         for ref, dict in probability.items():
           self.logger.debug(f"\t\tref: {ref} is a {type(ref)}\n\t\tdict: {dict} is a {type(dict)}")
-          cumulative_probability += dict["probability"]
+          cumulative_probability += dict[SimObject.PROBABILITY]
           self.logger.debug(f"cumulative_probability: {cumulative_probability}")
           self.logger.info(f"is: {round(random_number, 2)} <= {cumulative_probability}: {random_number <= cumulative_probability}")
           if random_number <= cumulative_probability:
             results[ref] += 1
-            self.logger.info(f"{event_name} is {dict["state"]}")
+            self.logger.info(f"{event_name} is {dict[SimObject.STATE]}")
             break
 
       ### DEBUG
@@ -198,6 +198,9 @@ class TresSimulator(BitSimulator):
 ###### SimObject
 ######
 class SimObject:
+  STATE : Final = "state"
+  PROBABILITY : Final = "probability"
+
   def __init__(self, state=None, name="object"):
     self.ERROR_MESSAGE = "Invalid state."
     self.state = state
@@ -334,7 +337,7 @@ class StatesSimulator(ProbabilisticSimulator):
         random_number = random.random()
         cumulative_probability = 0
         for ref, dict in probability.items():
-          cumulative_probability += dict["probability"]
+          cumulative_probability += dict[SimObject.PROBABILITY]
           if random_number <= cumulative_probability:
             results[ref] += 1
             break
@@ -360,7 +363,7 @@ class NamedStatesSimulator(StatesSimulator):
     results = {}
     for k, dict in self.events.items():
       for k1, dict1 in dict.items():
-        results[f"{dict1["state"]}"] = 0
+        results[f"{dict1[SimObject.STATE]}"] = 0
 
     ### DEBUG
     logging.debug(f"self.events: {self.events}")
@@ -371,9 +374,9 @@ class NamedStatesSimulator(StatesSimulator):
         random_number = random.random()
         cumulative_probability = 0
         for ref, dict1 in probability.items():
-          cumulative_probability += dict1["probability"]
+          cumulative_probability += dict1[SimObject.PROBABILITY]
           if random_number <= cumulative_probability:
-            results[f"{dict1["state"]}"] += 1
+            results[f"{dict1[SimObject.STATE]}"] += 1
             break
 
     return results
@@ -390,7 +393,7 @@ class StatesListSimulator(ProbabilisticSimulator):
 
   def add_event(self, list, probability=None):
     for obj in list:
-      tmp1 = {"probability": obj["probability"]}
+      tmp1 = {"probability": obj[SimObject.PROBABILITY]}
       self.events[f"{id(tmp1)}"] = tmp1
 
     logging.debug(f"self.events: {self.events}")
@@ -418,9 +421,9 @@ class StatesListSimulator(ProbabilisticSimulator):
       random_number = random.random()
       cumulative_probability = 0
       for event_name, probability in self.events.items():
-        cumulative_probability += probability["probability"]
+        cumulative_probability += probability[SimObject.PROBABILITY]
         if random_number <= cumulative_probability:
-          results[f"{event_name}-{100*probability["probability"]}"] += 1
+          results[f"{event_name}-{100*probability[SimObject.PROBABILITY]}"] += 1
           break
 
     return results
