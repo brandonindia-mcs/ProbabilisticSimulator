@@ -1,6 +1,7 @@
 import logging
 from types import MappingProxyType
 from typing import Final
+from ProbabilisticSimulator import ProbabilisticSimulator
 from ProbabilisticSimulator import BitObject
 from ProbabilisticSimulator import BitSimulator
 ######
@@ -13,6 +14,13 @@ class CoinSimulator(BitSimulator):
   def setup(self, n):
     for i in range(0, n):
       self.add_event(Coin(name="coin-"+str(i)))
+
+######
+###### CoinFlipSimulator
+######
+class CoinFlipSimulator(ProbabilisticSimulator):
+  def __init__(self):
+    super().__init__()
 
 ######
 ###### Coin
