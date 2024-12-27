@@ -2,13 +2,12 @@
 from ProbabilisticSimulator import ProbabilisticSimulator
 from ProbabilisticSimulator import BinarySimulator
 from ProbabilisticSimulator import BitSimulator
-from ProbabilisticSimulator import CoinSimulator
+from CoinSimulator import CoinSimulator
 from ProbabilisticSimulator import TresSimulator
 from ProbabilisticSimulator import StatesListSimulator
 from ProbabilisticSimulator import NamedStatesSimulator
 from ProbabilisticSimulator import StatesSimulator
 from ProbabilisticSimulator import SimObject
-from ProbabilisticSimulator import BitObject
 from ProbabilisticSimulator import BitObject
 import sys
 import logging
