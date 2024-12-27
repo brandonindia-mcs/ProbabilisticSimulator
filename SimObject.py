@@ -34,7 +34,7 @@ class SimObject:
   
   ### MOVE TO NEW "PARENT CLASS"
   def get_states(self):
-     print(f"{self.states}")
+     logging.debug(f"returning states: {self.states}")
      return self.states
   
 ######
