@@ -1,5 +1,8 @@
 import random
 import logging
+from SimObject import SimObject
+from SimObject import BitObject
+from SimObject import TresObject
 from types import MappingProxyType
 from typing import Final
 

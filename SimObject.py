@@ -32,6 +32,11 @@ class SimObject:
   def set_states(self, states):
     self.states = states
   
+  ### MOVE TO NEW "PARENT CLASS"
+  def get_states(self):
+     print(f"{self.states}")
+     return self.states
+  
 ######
 ###### BitObject
 ######
